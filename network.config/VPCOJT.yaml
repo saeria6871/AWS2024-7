@@ -1,0 +1,10 @@
+template:
+  path: VPCOJT.yaml
+  type: file
+parameters:
+  VpcCIDR: 10.0.0.0/16
+  PublicWebSubnetAZId: ap-northeast-1d
+  PublicWebSubnetCIDR: 10.0.1.0/24
+  PrivateDBSubnetAZId: ap-northeast-1d
+  PrivateDBSubnetCIDR: 10.0.2.0/24
+  NameTag: haratest2024
