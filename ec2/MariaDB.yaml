@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "MariaDB server in private subnet for OJT practice."
 
 Parameters: 
-  MyIP:
+  MariaDBServerPrivateIP:
     Description: IP address allowed to access EC2
     Type: String
 
@@ -22,7 +22,7 @@ Resources:
        NetworkInterfaces: 
         - AssociatePublicIpAddress: "false"
           DeviceIndex: "0"
-          PrivateIpAddress: !Ref MyIP
+          PrivateIpAddress: !Ref MariaDBServerPrivateIP
           SubnetId: !ImportValue awsCFN2024-dev-VPCOJT-PrivateDBSubnetId #他ファイルのアウトプットを参照
           GroupSet: 
             - !Ref MariaDBSG
@@ -36,7 +36,7 @@ Resources:
       Type: AWS::EC2::SecurityGroup
       Properties:
         GroupName: "MariaDBSG"
-        GroupDescription: "Allow access from MyIP"
+        GroupDescription: "Allow access from MariaDBServerPrivateIP"
         VpcId: !ImportValue awsCFN2024-dev-VPCOJT-VpcId #他ファイルのアウトプットを参照
         SecurityGroupIngress:
         # ssh

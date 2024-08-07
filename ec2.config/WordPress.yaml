@@ -2,5 +2,5 @@ template:
   path: WordPress.yaml
   type: file
 parameters:
-  MyIP: 10.0.1.10
+  WordPressServerPrivateIP: 10.0.1.10
   WordPressSubnetCIDR: 10.0.1.0/24

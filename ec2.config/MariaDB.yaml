@@ -2,5 +2,5 @@ template:
   path: MariaDB.yaml
   type: file
 parameters:
-  MyIP: 10.0.2.10
+  MariaDBServerPrivateIP: 10.0.2.10
   MariaDBSubnetCIDR: 10.0.2.0/24
