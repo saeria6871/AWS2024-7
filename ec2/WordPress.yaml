@@ -25,7 +25,7 @@ Resources:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
           PrivateIpAddress: !Ref MyIP
-          SubnetId: !ImportValue haraPractice2024-PublicWebSubnetId #他ファイルのアウトプットを参照
+          SubnetId: !ImportValue awsCFN2024-dev-VPCOJT-PublicWebSubnetId #他ファイルのアウトプットを参照
           GroupSet: 
             - !Ref WordPressSG
        Tags: 
@@ -39,7 +39,7 @@ Resources:
       Properties:
         GroupName: "WordPressSG"
         GroupDescription: "Allow access from PubWebSubnetIP"
-        VpcId: !ImportValue haraPractice2024-VpcId #他ファイルのアウトプットを参照
+        VpcId: !ImportValue awsCFN2024-dev-VPCOJT-VpcId #他ファイルのアウトプットを参照
         SecurityGroupIngress:
         # http
          - IpProtocol: tcp
