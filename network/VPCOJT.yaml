@@ -55,7 +55,7 @@ Resources:
         - Key: built-by
           Value: !Ref AWS::StackId
 
-  internetGatewayAttachment:
+  InternetGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       InternetGatewayId: !Ref InternetGateway
@@ -139,7 +139,7 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateDBSubnetRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref natGateway
+      NatGatewayId: !Ref NatGateway
 
   
 
@@ -151,35 +151,21 @@ Resources:
 
 
   #NAT Gatewayをつくる
-  natGateway:
+  NatGateway:
         Type: AWS::EC2::NatGateway
         Properties:
-            AllocationId: !GetAtt eipNat.AllocationId
+            AllocationId: !GetAtt EipNat.AllocationId
             SubnetId: !Ref PublicWebSubnet
             Tags:
                 - Key: Name
-                  Value: "natGateway"
+                  Value: "NatGateway"
 
     #Elastic IPをつくる
-  eipNat:
+  EipNat:
         Type: AWS::EC2::EIP
         Properties:
             Domain: "vpc"
 
-  # RouteNATGateway:
-  #  Type: AWS::EC2::Route
-  #  Properties:
-  #     RouteTableId: !Ref PrivateDBSubnetRouteTable
-  #     DestinationCidrBlock: '0.0.0.0/0'
-  #     NatGatewayId: !Ref natGateway
-
-    #ルート？
-  #privateroute:
-   #     Type: AWS::EC2::Route
-    #    Properties:
-     #       RouteTableId: !ImportValue SecondaryPrivateRouteTable
-      #      DestinationCidrBlock: "0.0.0.0/0"
-       #     NatGatewayId: !Ref natGateway
 
 
 #outputsの記述
@@ -195,25 +181,25 @@ Outputs:
     Value: !Ref InternetGateway
 
   PublicWebSubnetAZName:
-    Description: AvailabilityZone name of the primary public subnet.
+    Description: AvailabilityZone name of the public subnet.
     Value: !GetAtt PublicWebSubnet.AvailabilityZone
 
   PublicWebSubnetId:
-    Description: Subnet id of the primary public public subnet.
+    Description: Subnet id of the public subnet.
     Value: !Ref PublicWebSubnet
     Export:
       Name: !Sub "${AWS::StackName}-PublicWebSubnetId"
 
   PublicWebSubnetRouteTableId:
-    Description: Route table id of the primary public subnet.
+    Description: Route table id of the public subnet.
     Value: !Ref PublicWebSubnetRouteTable
 
   PrivateDBSubnetAZName:
-    Description: AvailabilityZone name of the secondary public subnet.
+    Description: AvailabilityZone name of the private subnet.
     Value: !GetAtt PrivateDBSubnet.AvailabilityZone
 
   PrivateDBSubnetId:
-    Description: Subnet id of the secondary public subnet.
+    Description: Subnet id of the private subnet.
     Value: !Ref PrivateDBSubnet
     Export:
       Name: !Sub "${AWS::StackName}-PrivateDBSubnetId"
