@@ -11,6 +11,14 @@ Parameters:
     Description: CIDR block for public subnet
     Type: String
 
+  SubnetID:
+    Description: Subnet ID for public subnet
+    Type: String
+
+  VPCID:
+    Description: VPC ID for Security Group
+    Type: String
+
 
 Resources:
      # Webサーバー(パブリックサブネットに配置)
@@ -25,7 +33,7 @@ Resources:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
           PrivateIpAddress: !Ref WordPressServerPrivateIP
-          SubnetId: !ImportValue awsCFN2024-dev-VPCOJT-PublicWebSubnetId #他ファイルのアウトプットを参照
+          SubnetId: !Ref SubnetID #stack outputを利用
           GroupSet: 
             - !Ref WordPressSG
        Tags: 
@@ -39,7 +47,7 @@ Resources:
       Properties:
         GroupName: "WordPressSG"
         GroupDescription: "Allow access from PubWebSubnetIP"
-        VpcId: !ImportValue awsCFN2024-dev-VPCOJT-VpcId #他ファイルのアウトプットを参照
+        VpcId: !Ref VPCID #stack outputを利用
         SecurityGroupIngress:
         # http
          - IpProtocol: tcp

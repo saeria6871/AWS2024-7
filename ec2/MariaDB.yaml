@@ -10,6 +10,13 @@ Parameters:
     Description: CIDR block for private subnet
     Type: String
 
+  SubnetID:
+    Description: Subnet ID for private subnet
+    Type: String
+
+  VPCID:
+    Description: VPC ID for Security Group
+    Type: String
 
 Resources:
      # MariaDBサーバー(プライベートサブネットに配置)
@@ -23,7 +30,7 @@ Resources:
         - AssociatePublicIpAddress: "false"
           DeviceIndex: "0"
           PrivateIpAddress: !Ref MariaDBServerPrivateIP
-          SubnetId: !ImportValue awsCFN2024-dev-VPCOJT-PrivateDBSubnetId #他ファイルのアウトプットを参照
+          SubnetId: !Ref SubnetID #stack outputを利用
           GroupSet: 
             - !Ref MariaDBSG
        Tags: 
@@ -37,7 +44,7 @@ Resources:
       Properties:
         GroupName: "MariaDBSG"
         GroupDescription: "Allow access from MariaDBServerPrivateIP"
-        VpcId: !ImportValue awsCFN2024-dev-VPCOJT-VpcId #他ファイルのアウトプットを参照
+        VpcId: !Ref VPCID #他ファイルのアウトプットを参照
         SecurityGroupIngress:
         # ssh
          - IpProtocol: tcp
