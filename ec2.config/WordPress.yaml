@@ -1,8 +1,0 @@
-template:
-  path: WordPress.yaml
-  type: file
-parameters:
-  WordPressServerPrivateIP: 10.0.1.10
-  WordPressSubnetCIDR: 10.0.1.0/24
-  SubnetID: !stack_output dev/VPCOJT.yaml::PublicWebSubnetId
-  VPCID: !stack_output dev/VPCOJT.yaml::VpcId

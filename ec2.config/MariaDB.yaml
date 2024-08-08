@@ -1,8 +1,0 @@
-template:
-  path: MariaDB.yaml
-  type: file
-parameters:
-  MariaDBServerPrivateIP: 10.0.2.10
-  MariaDBSubnetCIDR: 10.0.2.0/24
-  SubnetID: !stack_output dev/VPCOJT.yaml::PrivateWebSubnetId
-  VPCID: !stack_output dev/VPCOJT.yaml::VpcId
