@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "WordPress server in pubric subnet for OJT pracrice."
+
+Parameters: 
+
+  WordPressServerPrivateIP:
+    Description: IP address allowed to access EC2
+    Type: String
+
+  WordPressSubnetCIDR:
+    Description: CIDR block for public subnet
+    Type: String
+
+  SubnetID:
+    Description: Subnet ID for public subnet
+    Type: String
+
+  VPCID:
+    Description: VPC ID for Security Group
+    Type: String
+
+
+Resources:
+     # Webサーバー(パブリックサブネットに配置)
+    WordPress:
+     Type: AWS::EC2::Instance
+     Properties:
+       ImageId: ami-013a28d7c2ea10269
+       InstanceType: t3.micro
+       
+       IamInstanceProfile: !Ref InstanceProfile
+       NetworkInterfaces: 
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          PrivateIpAddress: !Ref WordPressServerPrivateIP
+          SubnetId: !Ref SubnetID #stack outputを利用
+          GroupSet: 
+            - !Ref WordPressSG
+       Tags: 
+        - Key: Name
+          Value: "WordPress"
+       UserData: String
+
+      # セキュリティグループ(パブリックサブネット用)
+    WordPressSG:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: "WordPressSG"
+        GroupDescription: "Allow access from PubWebSubnetIP"
+        VpcId: !Ref VPCID #stack outputを利用
+        SecurityGroupIngress:
+        # http
+         - IpProtocol: tcp
+           FromPort: 80
+           ToPort: 80
+           CidrIp: !Ref WordPressSubnetCIDR
+
+    
+    InstanceProfile:
+      Type: AWS::IAM::InstanceProfile
+      Properties:
+        Roles:
+          - !Ref IamRole
+
+
+    IamRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service: "ec2.amazonaws.com"
+              Action: "sts:AssumeRole"
+        ManagedPolicyArns:
+             - arn:aws:iam::aws:policy/AmazonS3FullAccess
+             - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+            
+
+
+
+    
+        
+
+Outputs:
+    WordPressInstanceId:
+      Description: "WordPress Instance ID"
+      Value: !Ref WordPress
+
+    EC2PubSGId:
+      Description: "Security Group ID for WordPress"
+      Value: !Ref WordPressSG      
